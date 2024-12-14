@@ -11,7 +11,12 @@ import SwiftUI
 struct CryptoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+           NavigationView {
+               // user NavigationStack in iOS 16+
+               HomeView()
+                   .navigationBarHidden(true) // deprecated
+                   // .toolbar(.hidden) iOS 16+  
+            }
         }
     }
 }
