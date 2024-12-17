@@ -36,5 +36,6 @@ struct CircleButtonView: View {
         
         CircleButtonView(iconName: "plus")
             .colorScheme(.dark)
+            .preferredColorScheme(.dark)
     }
 }
