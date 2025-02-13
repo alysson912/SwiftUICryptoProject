@@ -2,7 +2,7 @@
 //  CoinModel.swift
 //  SwiftfulCrypto
 //
-//  Created by Nick Sarno on 5/8/21.
+//  Created by Alysson Menezes on 13/02/25.
 //
 
 import Foundation
