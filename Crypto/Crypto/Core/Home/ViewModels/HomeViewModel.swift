@@ -21,6 +21,7 @@ class HomeViewModel: ObservableObject {
     
     private let coinDataService = CoinDataService()
     private let marketDataService = MarketDataService()
+    private let portfolioDataService = PortfolioDataService()
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -32,7 +33,7 @@ class HomeViewModel: ObservableObject {
         // updates allCoins
         $searchText
             .combineLatest(coinDataService.$allCoins)
-            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main) // atrasando o filtro em 0.5 
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main) // atrasando o filtro em 0.5
             .map(filterCoins)
             .sink { [weak self] (returnedCoins) in
                 self?.allCoins = returnedCoins
@@ -46,6 +47,28 @@ class HomeViewModel: ObservableObject {
                 self?.statistics = returnedStats
             }
             .store(in: &cancellables)
+        
+        // updates Portfolio
+        $allCoins
+            .combineLatest(portfolioDataService.$saveEntities)
+            .map { (coinModels, portfolioEntities) -> [CoinModel] in
+                
+                coinModels
+                    .compactMap { (coin) -> CoinModel? in
+                        guard let entity = portfolioEntities.first(where: { $0.coinID == coin.id}) else {
+                            return nil
+                        }
+                        return coin.updateHoldings(amount: entity.amount)
+                    }
+            }
+            .sink { [weak self] (returnedCoins) in
+                self?.portfolioCoins = returnedCoins
+            }
+            .store(in: &cancellables)
+    }
+    
+    func updatePortfolio(coin: CoinModel, amount: Double){
+        portfolioDataService.updatePortfolio(coin: coin, amount: amount)
     }
     
     private func filterCoins(text: String, coins: [CoinModel]) -> [CoinModel] {
@@ -67,13 +90,13 @@ class HomeViewModel: ObservableObject {
         
         // verificando se esta chegando dados (pois pode ou nao chegar)
         guard let data = marketDataModel else {
-        // se nao hover dados retorne:
+            // se nao hover dados retorne:
             return stats
         }
         // leading
         let marketCap = StatisticModel(title: "Market Cap", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
         
-            // center
+        // center
         let volume = StatisticModel(title: "24h Volume", value: data.volume)
         
         // trailing
@@ -87,6 +110,6 @@ class HomeViewModel: ObservableObject {
             portfolio
         ])
         return stats
-
+        
     }
 }
