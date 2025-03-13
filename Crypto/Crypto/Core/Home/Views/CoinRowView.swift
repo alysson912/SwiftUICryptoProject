@@ -14,7 +14,7 @@ struct CoinRowView: View {
     
     var body: some View {
         
-        HStack {
+        HStack (spacing: 0){
             leftColumn
             Spacer()
             if showHoldinColumn {
@@ -22,7 +22,10 @@ struct CoinRowView: View {
             }
             rightColumn
         }
-        .font(.headline)
+        .font(.subheadline)
+        .background(
+            Color.theme.background.opacity(0.001) // tornando toda a celula clicavel 
+        )
     }
 }
 

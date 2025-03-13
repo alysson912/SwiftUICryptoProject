@@ -12,6 +12,9 @@ struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
     @State private var showPortfolio: Bool = false // animate right
     @State private var showPortfolioView: Bool = false // new sheet
+    //MARK: Segue 1.0 cria duas variaveis de estado
+    @State private var selectedCoin: CoinModel? = nil
+    @State private var showDetailView: Bool = false
     
     var body: some View {
         ZStack {
@@ -44,6 +47,15 @@ struct HomeView: View {
                 Spacer(minLength: 0)
             }
         }
+        
+        //MARK: 1.1 Criar navigationLink em segundo plano, ativado quando atualizamos essas duas variaveis
+        .background(
+            NavigationLink(
+                destination: DetailLoadingView(coin: $selectedCoin),
+                isActive: $showDetailView,
+                label:{EmptyView() })
+            
+        )
     }
 }
 
@@ -83,8 +95,11 @@ extension HomeView {
     private var allCoinsListView: some View {
         List {
             ForEach(vm.allCoins) { coin in
-                CoinRowView(coin: coin, showHoldinColumn: false)
+                CoinRowView(coin: coin, showHoldinColumn: true)
                     .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                    .onTapGesture {
+                        segue(coin: coin)
+                    }
             }
         }
         .listStyle(PlainListStyle())
@@ -95,11 +110,19 @@ extension HomeView {
             ForEach(vm.portfolioCoins) { coin in
                 CoinRowView(coin: coin, showHoldinColumn: true)
                     .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                    .onTapGesture {
+                        segue(coin: coin)
+                    }
             }
         }
         .listStyle(PlainListStyle())
     }
-    
+    //MARK: Ao clicar no item abrira tela de detalhes respectivo aquele item
+    private func segue(coin: CoinModel){
+        selectedCoin = coin
+        showDetailView.toggle()
+    }
+     
     private var columnTitles: some View {
         HStack {
             HStack (spacing: 4) {

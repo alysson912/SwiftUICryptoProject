@@ -35,7 +35,6 @@ class CoinImageService {
     }
     
     private func downloadCoinImage() {
-        print("Downloading image now")
         guard let url = URL( string: coin.image) else { return }
         // Download Data
         imageSubscription = NetWorkingManager.download(url: url)
