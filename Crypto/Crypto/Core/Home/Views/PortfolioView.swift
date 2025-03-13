@@ -127,6 +127,7 @@ extension PortfolioView {
                 .opacity(showCheckmark ? 1.0 : 0.0)
             Button {
                 saveButtonPressed()
+                HapticManager.notification(type: .success)
             } label: {
                 Text("Save".uppercased())
             }
