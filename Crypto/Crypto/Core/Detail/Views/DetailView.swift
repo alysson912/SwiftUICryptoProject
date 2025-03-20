@@ -35,47 +35,18 @@ struct DetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(spacing: 20) {
                 Text("")
                     .frame(height: 150 )
                 
-                Text("Overview")
-                    .font(.title)
-                    .bold()
-                    .foregroundStyle(Color.theme.accent)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                overviewTitle
                 Divider()
+                overviewGrid
                 
-                LazyVGrid(
-                    columns: columns,
-                    alignment: .leading,
-                    spacing: spacing,
-                    pinnedViews: [],
-                        content: {
-                            ForEach(0..<6) { _ in
-                                StatisticView(stat: StatisticModel(title: "Title", value: "Value"))
-                            }
-                        })
-                    
-                
-                
-                Text("Additional Details")
-                    .font(.title)
-                    .bold()
-                    .foregroundStyle(Color.theme.accent)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                addionalTitle
                 Divider()
-                
-                LazyVGrid(
-                    columns: columns,
-                    alignment: .leading,
-                    spacing: spacing,
-                    pinnedViews: [],
-                        content: {
-                            ForEach(0..<6) { _ in
-                                StatisticView(stat: StatisticModel(title: "Title", value: "Value"))
-                            }
-                        })
+                additionalGrid
+
             }
             .padding()
         }
@@ -83,6 +54,51 @@ struct DetailView: View {
     }
 }
 
+extension DetailView {
+    private var overviewTitle: some View {
+        Text("Overview")
+            .font(.title)
+            .bold()
+            .foregroundStyle(Color.theme.accent)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var addionalTitle: some View {
+        
+        Text("Additional Details")
+            .font(.title)
+            .bold()
+            .foregroundStyle(Color.theme.accent)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+    }
+    
+    private var overviewGrid: some View {
+        LazyVGrid(
+            columns: columns,
+            alignment: .leading,
+            spacing: spacing,
+            pinnedViews: [],
+                content: {
+                    ForEach(vm.overviewStatistics) { stat in
+                        StatisticView(stat: stat)
+                    }
+                })
+    }
+    
+    private var additionalGrid : some View {
+        LazyVGrid(
+            columns: columns,
+            alignment: .leading,
+            spacing: spacing,
+            pinnedViews: [],
+                content: {
+                    ForEach(vm.additionalStatistics) { stat in
+                        StatisticView(stat: stat)
+                    }
+                })
+    }
+}
 
 struct DetailView_preview: PreviewProvider {
     static var previews: some View {
