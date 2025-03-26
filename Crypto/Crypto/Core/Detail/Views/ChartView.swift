@@ -10,7 +10,7 @@ import SwiftUI
 struct ChartView: View {
     
     private let data: [Double]
-    private  let maxY: Double
+    private let maxY: Double
     private let minY: Double
     
     private let lineColor: Color
@@ -21,7 +21,7 @@ struct ChartView: View {
     @State private var percentage: CGFloat = 0
     
     init(coin: CoinModel) {
-        self.data = coin.sparklineIn7D?.price ?? []
+        data = coin.sparklineIn7D?.price ?? []
         maxY = data.max() ?? 0
         minY = data.min() ?? 0
         
@@ -69,7 +69,7 @@ extension ChartView {
                     let xPosition = geometry.size.width / CGFloat(data.count) * CGFloat(index + 1)
                     
                     let yAxis = maxY - minY
-                    let yPosition = (1 - CGFloat(data[index] - minY) / yAxis) * geometry.size.height
+                    let yPosition = (1 - CGFloat((data[index] - minY) / yAxis)) * geometry.size.height
                     
                     
                     if index == 0 {
@@ -81,10 +81,10 @@ extension ChartView {
             }
             .trim(from: 0, to: percentage)
             .stroke(lineColor, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
-            .shadow(color: lineColor,radius: 10, x: 0.0, y: 10)
-            .shadow(color: lineColor.opacity(0.5),radius: 10, x: 0.0, y: 10)
-            .shadow(color: lineColor.opacity(0.2),radius: 10, x: 0.0, y: 10)
-            .shadow(color: lineColor.opacity(0.1),radius: 10, x: 0.0, y: 10)
+            .shadow(color: lineColor, radius: 10, x: 0.0, y: 10)
+            .shadow(color: lineColor.opacity(0.5),radius: 10, x: 0.0, y: 20)
+            .shadow(color: lineColor.opacity(0.2),radius: 10, x: 0.0, y: 30)
+            .shadow(color: lineColor.opacity(0.1),radius: 10, x: 0.0, y: 40)
         }
     }
     
