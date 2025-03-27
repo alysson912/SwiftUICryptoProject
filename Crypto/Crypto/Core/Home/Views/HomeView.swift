@@ -15,6 +15,7 @@ struct HomeView: View {
     //MARK: Segue 1.0 cria duas variaveis de estado
     @State private var selectedCoin: CoinModel? = nil
     @State private var showDetailView: Bool = false
+    @State private var showSettingsView: Bool = false // new Sheet
     
     var body: some View {
         ZStack {
@@ -46,6 +47,9 @@ struct HomeView: View {
                 }
                 Spacer(minLength: 0)
             }
+            .sheet(isPresented: $showSettingsView) {
+                SettingsView()
+            }
         }
         
         //MARK: 1.1 Criar navigationLink em segundo plano, ativado quando atualizamos essas duas variaveis
@@ -69,6 +73,8 @@ extension HomeView {
                 .onTapGesture {
                     if showPortfolio {
                         showPortfolioView.toggle()
+                    } else {
+                        showSettingsView.toggle()
                     }
                 }
                 .background(
